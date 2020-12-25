@@ -37,6 +37,6 @@ object AppModule {
     @Singleton
     fun provideApplicationScope() = CoroutineScope(SupervisorJob()) /**SupervisorsJob()
                                                                     *...Means that is one coroutine fails others will not be affected.
-     *                                                              *...if one child fails keep other running
+     *                                                              *...it tells to coroutine if one child fails keep other running
      *                                                              *...Without this if one coroutine fails all are canceled**/
 }
