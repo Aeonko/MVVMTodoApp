@@ -3,6 +3,7 @@ package com.nemanjamiseljic.mvvmtodoapp.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.GlobalScope
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -18,7 +19,9 @@ abstract class TaskDatabase: RoomDatabase() {
             super.onCreate(db)
 
             //db operations on creation
-            database.get()
+            val dao = database.get().taskDao()
+
+
         }
     }
 }

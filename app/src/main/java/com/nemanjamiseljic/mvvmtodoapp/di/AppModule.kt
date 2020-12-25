@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 
@@ -22,11 +24,18 @@ object AppModule {
         callback:TaskDatabase.Callback                                            /**TaskDatabase callback is inner class in TaskDatabase.kt**/
     ) = Room.databaseBuilder(app, TaskDatabase::class.java,"task_database")             /**Creates database**/
             .fallbackToDestructiveMigration()
-            .addCallback()
+            .addCallback(callback)
             .build()
 
     @Provides
     fun provideTaskDao(                             /**Provides dao for working with table task**/
         db: TaskDatabase                            /**Gets instance of database created in method above "provideDatabase" **/
     ) = db.taskDao()
+
+
+    @Provides
+    @Singleton
+    fun provideApplicationScope() = CoroutineScope(SupervisorJob()) /**SupervisorsJob()
+                                                                    *...Means that is one coroutine fails others will not be affected.
+     *                                                              *...Without this if one coroutine fails all are canceled**/
 }
