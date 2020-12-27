@@ -3,13 +3,15 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+
 //    apply plugin: 'dagger.hilt.android.plugin'
 //    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.nemanjamiseljic.mvvmtodoapp"
@@ -73,10 +75,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 
     // Dagger Hilt
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
     implementation 'com.google.dagger:hilt-android:2.30.1-alpha'
-    kapt 'com.google.dagger:hilt-android-compiler:2.30.1-alpha'
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:2.28-alpha"
-    kapt "androidx.hilt:hilt-compiler:2.28-alpha"
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
+    kapt 'com.google.dagger:hilt-android-compiler:2.28-alpha'
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"

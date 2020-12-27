@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 
@@ -33,10 +34,19 @@ object AppModule {
     ) = db.taskDao()
 
 
+    @ApplicationScope // instance of annotation class ApplicationScope
     @Provides
     @Singleton
-    fun provideApplicationScope() = CoroutineScope(SupervisorJob()) /**SupervisorsJob()
-                                                                    *...Means that is one coroutine fails others will not be affected.
+    fun provideApplicationScope() = CoroutineScope(SupervisorJob()) /** Provides application scope when needed to run methods like coroutines
+                                                                    *...SupervisorJob() Means that if one coroutine fails others will not be affected.
      *                                                              *...it tells to coroutine if one child fails keep other running
      *                                                              *...Without this if one coroutine fails all are canceled**/
+
+
+
+
+    @Retention(AnnotationRetention.RUNTIME)
+    @Qualifier
+    annotation class ApplicationScope /**If we want to have more then one scope provided by hilt we can annotate them with classes like this
+                                        *..It means now we can specify which scope we want to use **/
 }
