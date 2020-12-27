@@ -6,6 +6,7 @@ import com.nemanjamiseljic.mvvmtodoapp.data.TaskDao
 import com.nemanjamiseljic.mvvmtodoapp.data.TaskDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.DefineComponent
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
