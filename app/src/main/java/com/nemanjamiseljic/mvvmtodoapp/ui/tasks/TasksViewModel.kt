@@ -19,6 +19,7 @@ class TasksViewModel @ViewModelInject constructor (
 
     private val taskFlow = combine(
         /**Combines this three search queries into one later in the TaskDao interface**/
+        /**For this can be created custom class to-do the same but for this here combine works perfectly just need to be careful of item order passed in combine **/
         searchQuery,
         sortOrder,
         hideCompleted
