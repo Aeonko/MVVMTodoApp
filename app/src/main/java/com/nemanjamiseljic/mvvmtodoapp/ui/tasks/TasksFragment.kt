@@ -53,7 +53,7 @@ class TasksFragment: Fragment(R.layout.fragment_task) {
 
         searchView.onQueryTextChanged {
             //update search query
-            viewModel.searchQuery.value = it
+            viewModel.searchQuery.value = it //Tells view model for which data to search for
         }  /**this onQueryTextChanged is custom written function
                                             *...It can be found in our class in mvvmtodoapp/util/ViewExt.kt **/
     }
@@ -61,17 +61,16 @@ class TasksFragment: Fragment(R.layout.fragment_task) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.action_sort_by_name->{
-
+                viewModel.sortOrder.value = SortOrder.BY_NAME
                 true
             }
             R.id.action_sort_by_date_created->{
-                true
-            }
-            R.id.action_hide_completed_tasks->{
+                viewModel.sortOrder.value = SortOrder.BY_DATE
                 true
             }
             R.id.action_hide_completed_tasks->{
                 item.isChecked = !item.isChecked
+                viewModel.hideCompleted.value = item.isChecked
                 true
             }
             R.id.action_delete_all_completed_tasks->{
