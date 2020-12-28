@@ -18,13 +18,14 @@ class TasksViewModel @ViewModelInject constructor (
     val hideCompleted = MutableStateFlow(false)
 
     private val taskFlow = combine(
+        /**Combines this three search queries into one later in the TaskDao interface**/
         searchQuery,
         sortOrder,
         hideCompleted
     ){ query, sortOrder, hideCompleted ->
-        Triple(query,sortOrder,hideCompleted)
+        Triple(query,sortOrder,hideCompleted) /**Triple is the class used to pass data as a triad of values**/
     }.flatMapLatest {(query,sortOrder,hideCompleted)->
-        //When ever searchQuery is changed invoke this and get new tasks lists
+        //When ever searchQuery, sort order or hide completed is changed invoke this and get new tasks lists
         taskDao.getTasks(query,sortOrder,hideCompleted)
     }
     val tasks = taskFlow.asLiveData()
