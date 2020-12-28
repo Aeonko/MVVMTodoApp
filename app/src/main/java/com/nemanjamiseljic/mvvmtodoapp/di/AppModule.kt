@@ -2,13 +2,11 @@ package com.nemanjamiseljic.mvvmtodoapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.nemanjamiseljic.mvvmtodoapp.data.TaskDao
 import com.nemanjamiseljic.mvvmtodoapp.data.TaskDatabase
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.DefineComponent
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
@@ -16,7 +14,7 @@ import javax.inject.Singleton
 
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ApplicationComponent::class)
 object AppModule {
 
     @Provides
