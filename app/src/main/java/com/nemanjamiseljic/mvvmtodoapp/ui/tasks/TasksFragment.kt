@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nemanjamiseljic.mvvmtodoapp.R
 import com.nemanjamiseljic.mvvmtodoapp.data.SortOrder
+import com.nemanjamiseljic.mvvmtodoapp.data.Task
 import com.nemanjamiseljic.mvvmtodoapp.databinding.FragmentTaskBinding
 import com.nemanjamiseljic.mvvmtodoapp.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class TasksFragment: Fragment(R.layout.fragment_task) {
+class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickListener {
 
     /**Gets instance of viewmodel**/
     private val viewModel: TasksViewModel by viewModels()
@@ -32,7 +33,7 @@ class TasksFragment: Fragment(R.layout.fragment_task) {
 
         val binding = FragmentTaskBinding.bind(view)
 
-        val tasksAdapter = TasksAdapter()
+        val tasksAdapter = TasksAdapter(this)
 
 
         binding.apply {
@@ -47,6 +48,15 @@ class TasksFragment: Fragment(R.layout.fragment_task) {
             tasksAdapter.submitList(it)
         })
         setHasOptionsMenu(true)
+    }
+
+
+    override fun onItemClick(task: Task) {
+        viewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        viewModel.onTaskCheckedChanged(task,isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

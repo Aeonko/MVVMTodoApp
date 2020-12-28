@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.nemanjamiseljic.mvvmtodoapp.data.PreferencesManager
 import com.nemanjamiseljic.mvvmtodoapp.data.SortOrder
+import com.nemanjamiseljic.mvvmtodoapp.data.Task
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -37,6 +38,7 @@ class TasksViewModel @ViewModelInject constructor (
         taskDao.getTasks(query,filterPreferences.sortOrder,filterPreferences.hideCompleted)
     }
 
+    val tasks = taskFlow.asLiveData()
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         /**View model is called because we want coroutine that lives as long as current view**/
         preferencesManager.updateSortOrder(sortOrder)
@@ -57,5 +59,11 @@ class TasksViewModel @ViewModelInject constructor (
 //        //When ever searchQuery, sort order or hide completed is changed invoke this and get new tasks lists
 //        taskDao.getTasks(query,sortOrder,hideCompleted)
 //    }
-    val tasks = taskFlow.asLiveData()
+
+    fun onTaskSelected(task: Task){
+
+    }
+    fun onTaskCheckedChanged(task: Task, isChecked: Boolean)= viewModelScope.launch {
+        taskDao.update(task.copy(completed = isChecked)) /**It copies original task just changes value of completed to new value**/
+    }
 }
