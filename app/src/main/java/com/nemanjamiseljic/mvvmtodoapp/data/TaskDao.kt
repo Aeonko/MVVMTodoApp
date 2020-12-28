@@ -1,8 +1,7 @@
 package com.nemanjamiseljic.mvvmtodoapp.data
 
-import androidx.lifecycle.LiveData
+
 import androidx.room.*
-import com.nemanjamiseljic.mvvmtodoapp.ui.tasks.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao
