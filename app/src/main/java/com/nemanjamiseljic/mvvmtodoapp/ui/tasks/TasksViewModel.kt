@@ -87,7 +87,8 @@ class TasksViewModel @ViewModelInject constructor (
         /**Deletes task item from room database**/
         taskDao.deleteTask(task)
         taskEvenChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
-        /**Sends data through channels and this can be received in observers where we define channel receivers in this case TaskFragment.kt**/
+        /**Sends data through channels and this can be received in
+         * ...observers where we define channel receivers in this case TaskFragment.kt**/
     }
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
         taskDao.insert(task)
