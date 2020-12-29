@@ -33,6 +33,7 @@ class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickL
     /**Gets instance of viewmodel**/
     private val viewModel: TasksViewModel by viewModels()
 
+    private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -132,7 +133,14 @@ class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickL
         inflater.inflate(R.menu.menu_fragment_task,menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView  /**Finds search view in inflated menu**/
+        searchView = searchItem.actionView as SearchView  /**Finds search view in inflated menu**/
+
+        val pendingQuery = viewModel.searchQuery.value         /**Fix bug that when user rotates device search query is lost**/
+        if(pendingQuery!=null && pendingQuery.isNotEmpty()){        /**This way we make sure that on device rotation search query persists**/
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery,false)
+        }
+
 
         searchView.onQueryTextChanged {
             //update search query
@@ -174,5 +182,12 @@ class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickL
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        /**onDestroyView is implemented to prevent sending data to viewModel when device is rotated
+         * ...without this it send's empty string and on rotate doesn't work**/
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }
