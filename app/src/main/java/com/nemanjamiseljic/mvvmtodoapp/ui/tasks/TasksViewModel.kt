@@ -1,10 +1,9 @@
 package com.nemanjamiseljic.mvvmtodoapp.ui.tasks
 
-import androidx.lifecycle.ViewModel
+import androidx.hilt.Assisted
 import com.nemanjamiseljic.mvvmtodoapp.data.TaskDao
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.nemanjamiseljic.mvvmtodoapp.data.PreferencesManager
 import com.nemanjamiseljic.mvvmtodoapp.data.SortOrder
 import com.nemanjamiseljic.mvvmtodoapp.data.Task
@@ -17,10 +16,14 @@ import kotlinx.coroutines.launch
 
 class TasksViewModel @ViewModelInject constructor (
     private val taskDao: TaskDao,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    @Assisted private val state: SavedStateHandle
 ): ViewModel() {
 
-    val searchQuery = MutableStateFlow("")
+    val searchQuery = state.getLiveData("searchQuery","" )
+
+
+
 
     val preferencesFlow = preferencesManager.preferencesFlow
 
@@ -42,7 +45,7 @@ class TasksViewModel @ViewModelInject constructor (
     private val taskFlow = combine(
             /**Combines this three search queries into one later in the TaskDao interface**/
             /**For this can be created custom class to-do the same but for this here combine works perfectly just need to be careful of item order passed in combine **/
-            searchQuery,
+            searchQuery.asFlow(),
             preferencesFlow
     ){ query, filterPreferences ->
         Pair(query,filterPreferences) /**If there is data saved in DataStore class filter preferences have them that is why we implemented this class**/
@@ -75,8 +78,8 @@ class TasksViewModel @ViewModelInject constructor (
 //    }
     // SEND DATA WITH CLASS Triple()
 
-    fun onTaskSelected(task: Task){
-
+    fun onTaskSelected(task: Task) = viewModelScope.launch {
+        taskEvenChannel.send(TasksEvent.NavigateToAddedTaskScreen(task))  /**Navigates to AddEditTaskFragment and passing him arguments **/
     }
     fun onTaskCheckedChanged(task: Task, isChecked: Boolean)= viewModelScope.launch {
         taskDao.update(task.copy(completed = isChecked)) /**It copies original task just changes value of completed to new value**/
@@ -96,7 +99,14 @@ class TasksViewModel @ViewModelInject constructor (
          * ...to user this seams like same object is put back**/
     }
 
+
+    fun onAddNewTaskClick() = viewModelScope.launch {
+        taskEvenChannel.send(TasksEvent.NavigateToAddTaskScreen)
+    }
+
     sealed class TasksEvent{
+        object NavigateToAddTaskScreen: TasksEvent()
+        data class NavigateToAddedTaskScreen(val task: Task): TasksEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task): TasksEvent()
     }/**Sealed classes are similar to enums. Main difference is that they can hold data**/
 }
