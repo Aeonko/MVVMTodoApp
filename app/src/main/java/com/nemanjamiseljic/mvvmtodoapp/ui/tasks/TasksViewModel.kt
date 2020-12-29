@@ -4,11 +4,12 @@ import androidx.hilt.Assisted
 import com.nemanjamiseljic.mvvmtodoapp.data.TaskDao
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.nemanjamiseljic.mvvmtodoapp.ADD_TASK_RESULT_OK
+import com.nemanjamiseljic.mvvmtodoapp.EDIT_TASK_RESULT_OK
 import com.nemanjamiseljic.mvvmtodoapp.data.PreferencesManager
 import com.nemanjamiseljic.mvvmtodoapp.data.SortOrder
 import com.nemanjamiseljic.mvvmtodoapp.data.Task
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -104,9 +105,21 @@ class TasksViewModel @ViewModelInject constructor (
         taskEvenChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
+    fun onAddEditResult(result: Int){
+        when(result){
+            ADD_TASK_RESULT_OK-> showTaskSavedConfirmationMessage("Task added")
+            EDIT_TASK_RESULT_OK-> showTaskSavedConfirmationMessage("Task added")
+        }
+    }
+
+    private fun showTaskSavedConfirmationMessage(text: String) = viewModelScope.launch {
+        taskEvenChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(text))
+    }
+
     sealed class TasksEvent{
         object NavigateToAddTaskScreen: TasksEvent()
         data class NavigateToAddedTaskScreen(val task: Task): TasksEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task): TasksEvent()
+        data class ShowTaskSavedConfirmationMessage(val msg: String): TasksEvent()
     }/**Sealed classes are similar to enums. Main difference is that they can hold data**/
 }
