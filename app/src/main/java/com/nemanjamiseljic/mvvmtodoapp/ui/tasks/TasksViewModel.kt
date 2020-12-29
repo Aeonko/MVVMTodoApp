@@ -116,10 +116,17 @@ class TasksViewModel @ViewModelInject constructor (
         taskEvenChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(text))
     }
 
+    fun onDeleteAllCompletedClick() = viewModelScope.launch {
+        taskEvenChannel.send(TasksEvent.MavogateToDeleteAllCompletedScreen)
+    }
+
     sealed class TasksEvent{
         object NavigateToAddTaskScreen: TasksEvent()
         data class NavigateToAddedTaskScreen(val task: Task): TasksEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task): TasksEvent()
         data class ShowTaskSavedConfirmationMessage(val msg: String): TasksEvent()
-    }/**Sealed classes are similar to enums. Main difference is that they can hold data**/
+        object MavogateToDeleteAllCompletedScreen: TasksEvent()
+
+    }/**Sealed classes are similar to enums. Main difference is that they can hold data
+     *...this is used to send data trough channels in our case from TaskViewModel to TaskFragment**/
 }

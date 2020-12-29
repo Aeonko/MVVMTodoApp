@@ -22,7 +22,6 @@ import com.nemanjamiseljic.mvvmtodoapp.databinding.FragmentTaskBinding
 import com.nemanjamiseljic.mvvmtodoapp.util.exchaustive
 import com.nemanjamiseljic.mvvmtodoapp.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_task.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -108,6 +107,10 @@ class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickL
                     is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage->{
                         Snackbar.make(requireView(),event.msg, Snackbar.LENGTH_SHORT).show()
                     }
+                    TasksViewModel.TasksEvent.MavogateToDeleteAllCompletedScreen -> {
+                        val action = TasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
+                        findNavController().navigate(action)
+                    }
                 }.exchaustive
 
             }
@@ -164,6 +167,7 @@ class TasksFragment: Fragment(R.layout.fragment_task), TasksAdapter.OnItemClickL
                 true
             }
             R.id.action_delete_all_completed_tasks->{
+                viewModel.onDeleteAllCompletedClick()
                 true
             }
             else->{
